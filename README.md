@@ -1,5 +1,5 @@
 # CakeCraft
-Full-stack starter created from the supplied specification: React UI, ASP.NET Core 10 Web API, EF Core SQL Server, Identity/JWT roles, Baker CRUD, Customer browsing/search, Key Vault hook, Swagger, and GitHub Actions.
+Full-stack starter created from the supplied specification: React UI, ASP.NET Core 9 Web API, EF Core SQL Server, Identity/JWT roles, Baker CRUD, Customer browsing/search, Key Vault hook, Swagger, and GitHub Actions.
 
 ## Run backend
 1. Update `dotnetapp/appsettings.json` with a safe SQL connection string and a 32+ character JWT secret.
