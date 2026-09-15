@@ -1,0 +1,12 @@
+name: backend
+on: { workflow_dispatch: {}, push: { paths: ['dotnetapp/**'] } }
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - run: dotnet publish dotnetapp/dotnetapp.csproj -c Release -o publish
+      - uses: azure/webapps-deploy@v3
+        with: { app-name: '${{ vars.BACKEND_APP_NAME }}', publish-profile: '${{ secrets.BACKEND_PUBLISH_PROFILE }}', package: publish }

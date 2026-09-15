@@ -1,0 +1,14 @@
+name: frontend
+on: { workflow_dispatch: {}, push: { paths: ['reactapp/**'] } }
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci && npm run build
+        working-directory: reactapp
+        env: { REACT_APP_API_BASE_URL: '${{ vars.API_BASE_URL }}' }
+      - uses: azure/webapps-deploy@v3
+        with: { app-name: '${{ vars.FRONTEND_APP_NAME }}', publish-profile: '${{ secrets.FRONTEND_PUBLISH_PROFILE }}', package: reactapp/build }
