@@ -17,13 +17,15 @@ b.Services.AddScoped<IAuthService,AuthService>();b.Services.AddScoped<ICakeServi
 b.Services.AddControllers();b.Services.AddEndpointsApiExplorer();b.Services.AddSwaggerGen();
 b.Services.AddCors(o=>o.AddDefaultPolicy(p=>p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 var key=Encoding.UTF8.GetBytes(b.Configuration["JWT:Secret"]??throw new InvalidOperationException("JWT secret missing"));b.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o=>{o.TokenValidationParameters=new(){ValidateIssuer=true,ValidateAudience=true,ValidateLifetime=true,ValidateIssuerSigningKey=true,ValidIssuer=b.Configuration["JWT:ValidIssuer"],ValidAudience=b.Configuration["JWT:ValidAudience"],IssuerSigningKey=new SymmetricSecurityKey(key)};});
-var app=b.Build();app.UseSwagger();
+var app=b.Build();
+if (app.Environment.IsDevelopment())
+{
+	app.UseDeveloperExceptionPage();
+}
+
+app.UseSwagger();
 app.UseSwaggerUI();app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-if (app.Environment.IsDevelopment())
-{
-app.UseDeveloperExceptionPage();
-}
