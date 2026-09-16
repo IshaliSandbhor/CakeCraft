@@ -1,3 +1,82 @@
-import React from'react';import{BrowserRouter,Routes,Route,Navigate}from'react-router-dom';import Login from'./Components/Login';import Signup from'./Components/Signup';import HomePage from'./Components/HomePage';import CakeForm from'./BakerComponents/CakeForm';import ViewCake from'./BakerComponents/ViewCake';import CustomerViewCake from'./CustomerComponents/CustomerViewCake';
-const Private=({children,role})=>{const token=localStorage.getItem('token'),r=localStorage.getItem('role');return token&&(!role||r===role)?children:<Navigate to="/"/>};
-export default function App(){return <BrowserRouter><Routes><Route path="/" element={<Login/>}/><Route path="/signup" element={<Signup/>}/><Route path="/home" element={<Private><HomePage/></Private>}/><Route path="/baker/cakes" element={<Private role="Baker"><ViewCake/></Private>}/><Route path="/baker/cakes/new" element={<Private role="Baker"><CakeForm/></Private>}/><Route path="/baker/cakes/:id" element={<Private role="Baker"><CakeForm/></Private>}/><Route path="/customer/cakes" element={<Private role="Customer"><CustomerViewCake/></Private>}/><Route path="*" element={<Navigate to="/"/>}/></Routes></BrowserRouter>}
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./Components/Login";
+import Signup from "./Components/Signup";
+import HomePage from "./Components/HomePage";
+import CakeForm from "./BakerComponents/CakeForm";
+import ViewCake from "./BakerComponents/ViewCake";
+import CustomerViewCake from "./CustomerComponents/CustomerViewCake";
+const Private = ({ children, role }) => {
+  const token = localStorage.getItem("token"),
+    r = localStorage.getItem("role");
+  return token && (!role || r === role) ? children : <Navigate to="/" />;
+};
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/home"
+          element={
+            <Private>
+              <HomePage />
+            </Private>
+          }
+        />
+        <Route
+          path="/baker/cakes"
+          element={
+            <Private role="Baker">
+              <ViewCake />
+            </Private>
+          }
+        />
+        <Route
+          path="/baker/cakes/new"
+          element={
+            <Private role="Baker">
+              <CakeForm />
+            </Private>
+          }
+        />
+        <Route
+          path="/baker/cakes/:id"
+          element={
+            <Private role="Baker">
+              <CakeForm />
+            </Private>
+          }
+        />
+        <Route
+          path="/customer/cakes"
+          element={
+            <Private role="Customer">
+              <CustomerViewCake />
+            </Private>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+// import React from "react";
+// import { BrowserRouter } from "react-router-dom";
+// import HomePage from "./Components/HomePage";
+// import Login from "./Components/Login";
+// import CakeForm from "./BakerComponents/CakeForm" ;
+// import CustomerViewCake from "./CustomerComponents/CustomerViewCake" ;
+
+// function App() {
+//   return (
+//     <BrowserRouter>
+//     <CustomerViewCake />
+
+//     </BrowserRouter>
+//   );
+// }
+
+// export default App;

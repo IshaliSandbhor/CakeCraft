@@ -1,2 +1,49 @@
-import React,{useState}from'react';import{Link,useNavigate}from'react-router-dom';import api from'../apiConfig';
-export default function Login(){const[email,setEmail]=useState(''),[password,setPassword]=useState(''),[error,setError]=useState(''),nav=useNavigate();async function submit(e){e.preventDefault();try{const{data}=await api.post('/api/login',{email,password});localStorage.setItem('token',data.token);localStorage.setItem('role',data.role);localStorage.setItem('username',data.username);nav('/home')}catch(x){setError(x.response?.data?.message||'Login failed')}}return <main className="center"><form className="card" onSubmit={submit}><h1>CakeCraft</h1><h2>Login</h2>{error&&<p className="error">{error}</p>}<input type="email" placeholder="Email" required value={email} onChange={e=>setEmail(e.target.value)}/><input type="password" placeholder="Password" required minLength="6" value={password} onChange={e=>setPassword(e.target.value)}/><button>Login</button><p>Don't have an account? <Link to="/signup">Signup</Link></p></form></main>}
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../apiConfig";
+export default function Login() {
+  const [email, setEmail] = useState(""),
+    [password, setPassword] = useState(""),
+    [error, setError] = useState(""),
+    nav = useNavigate();
+  async function submit(e) {
+    e.preventDefault();
+    try {
+      const { data } = await api.post("/api/login", { email, password });
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("username", data.username);
+      nav("/home");
+    } catch (x) {
+      setError(x.response?.data?.message || "Login failed");
+    }
+  }
+  return (
+    <main className="center">
+      <form className="card" onSubmit={submit}>
+        <h1>CakeCraft</h1>
+        <h2>Login</h2>
+        {error && <p className="error">{error}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          minLength="6"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button>Login</button>
+        <p>
+          Don't have an account? <Link to="/signup">Signup</Link>
+        </p>
+      </form>
+    </main>
+  );
+}
