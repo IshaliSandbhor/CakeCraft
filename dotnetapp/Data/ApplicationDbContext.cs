@@ -7,6 +7,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
 	public DbSet<Cake> Cakes => Set<Cake>();
 	public new DbSet<User> Users => Set<User>();
+	public DbSet<Order> Orders => Set<Order>();
 	public DbSet<ErrorLog> ErrorLogs => Set<ErrorLog>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -14,5 +15,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 		base.OnModelCreating(modelBuilder);
 		modelBuilder.Entity<Cake>().Property(cake => cake.Price).HasPrecision(18, 2);
 		modelBuilder.Entity<Cake>().Property(cake => cake.Quantity).HasPrecision(18, 2);
+		modelBuilder.Entity<Order>().Property(order => order.TotalPrice).HasPrecision(18, 2);
 	}
 }

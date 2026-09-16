@@ -5,7 +5,9 @@ import Signup from "./Components/Signup";
 import HomePage from "./Components/HomePage";
 import CakeForm from "./BakerComponents/CakeForm";
 import ViewCake from "./BakerComponents/ViewCake";
+import BakerOrders from "./BakerComponents/BakerOrders";
 import CustomerViewCake from "./CustomerComponents/CustomerViewCake";
+import CustomerOrders from "./CustomerComponents/CustomerOrders";
 const Private = ({ children, role }) => {
   const token = localStorage.getItem("token"),
     r = localStorage.getItem("role");
@@ -34,6 +36,14 @@ export default function App() {
           }
         />
         <Route
+          path="/baker/orders"
+          element={
+            <Private role="Baker">
+              <BakerOrders />
+            </Private>
+          }
+        />
+        <Route
           path="/baker/cakes/new"
           element={
             <Private role="Baker">
@@ -54,6 +64,14 @@ export default function App() {
           element={
             <Private role="Customer">
               <CustomerViewCake />
+            </Private>
+          }
+        />
+        <Route
+          path="/customer/orders"
+          element={
+            <Private role="Customer">
+              <CustomerOrders />
             </Private>
           }
         />

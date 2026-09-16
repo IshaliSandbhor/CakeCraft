@@ -21,6 +21,13 @@ export default function HomePage() {
         >
           Cakes
         </button>
+        <button
+          onClick={() =>
+            nav(role === "Baker" ? "/baker/orders" : "/customer/orders")
+          }
+        >
+          Orders
+        </button>
         <button onClick={logout}>Logout</button>
       </nav>
       <main className="hero">

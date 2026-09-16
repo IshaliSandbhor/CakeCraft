@@ -3,18 +3,30 @@ import { useNavigate } from "react-router-dom";
 import api from "../apiConfig";
 export default function ViewCake() {
   const [cakes, setCakes] = useState([]),
-    nav = useNavigate(),
-    load = () => api.get("/api/cakes").then((r) => setCakes(r.data));
-  useEffect(load, []);
+    nav = useNavigate();
+
+  const load = async () => {
+    const cakesResp = await api.get("/api/cakes");
+    setCakes(cakesResp.data);
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
   async function del(id) {
     if (window.confirm("Delete this cake?")) {
       await api.delete("/api/cakes/" + id);
       load();
     }
   }
+
   return (
     <main>
-      <h2>Baker Cakes</h2>
+      <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "16px" }}>
+        <button onClick={() => nav("/home")}>Back</button>
+        <h2 style={{ margin: 0 }}>Baker Cakes</h2>
+      </div>
       <button onClick={() => nav("/baker/cakes/new")}>Add Cake</button>
       <section className="grid">
         {cakes.length ? (
