@@ -1,12 +1,61 @@
-name: backend
-on: { workflow_dispatch: {}, push: { paths: ['dotnetapp/**'] } }
+name: Backend CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "dotnetapp/**"
+      - ".github/workflows/backend.yml"
+  push:
+    branches: [main]
+    paths:
+      - "dotnetapp/**"
+      - ".github/workflows/backend.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-dotnet@v4
-        with: { dotnet-version: '8.0.x' }
-      - run: dotnet publish dotnetapp/dotnetapp.csproj -c Release -o publish
+        with:
+          dotnet-version: 9.0.x
+
+      - run: dotnet restore dotnetapp/dotnetapp.csproj
+
+      - run: dotnet build dotnetapp/dotnetapp.csproj --configuration Release --no-restore
+
+      - name: Publish API
+        run: dotnet publish dotnetapp/dotnetapp.csproj --configuration Release --no-build --no-restore --output "${{ runner.temp }}/api-publish"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backend-publish
+          path: ${{ runner.temp }}/api-publish
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: backend-publish
+          path: publish
+
       - uses: azure/webapps-deploy@v3
-        with: { app-name: '${{ vars.BACKEND_APP_NAME }}', publish-profile: '${{ secrets.BACKEND_PUBLISH_PROFILE }}', package: publish }
+        with:
+          app-name: ${{ vars.BACKEND_APP_NAME }}
+          publish-profile: ${{ secrets.BACKEND_PUBLISH_PROFILE }}
+          package: publish
